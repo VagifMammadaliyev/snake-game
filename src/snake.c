@@ -1,45 +1,22 @@
 #include "snake.h"
 
 /*
- * Create snake node at specified positions
- * and with specified length.
+ * Create snake with specified length.
  */
-Snake *create_snake(int start_x, int start_y, size_t length) {
+Snake *create_snake(size_t length) {
     Snake *snake = malloc(sizeof(*snake));
-    size_t last_node_i = length - 1;  /* used to check for tail node */
-    SnakeNode *prev_node = NULL;
+    if (!snake) goto error;
 
-    snake->size = length;
-    snake->score = 0UL;
-
-    for (size_t i = 0; i < length; i++) {
-        SnakeNode *node = malloc(sizeof(*node));
-        SDL_Rect *rect = malloc(sizeof(*rect));
-
-        node->rect = rect;
-        node->direction = LEFT;
-
-        if (prev_node) {
-            node->prev = prev_node;
-            prev_node->next = node;
-            node->next = NULL;
-
-            node->x = prev_node->x + 1;
-            node->y = prev_node->y;
-        } else {  /* head node */
-            node->prev = NULL;
-
-            node->x = start_x;
-            node->y = start_y;
-            snake->head = node;
-        }
-        if (i == last_node_i) {
-            snake->tail = node;
-        }
-        prev_node = node;
-    }
+    snake->size = 0;
+    snake->score = 0;
+    snake->head = NULL; snake->tail = NULL;
+    for (size_t i = 0; i < length; i++) add_node(snake);
 
     return snake;
+
+error:
+    delete_snake(snake);
+    return NULL;
 }
 
 
@@ -61,8 +38,10 @@ void delete_node(SnakeNode *node, void *i) {
  * Releases memory occupied by snake.
  */
 void delete_snake(Snake *snake) {
-    foreach_snake_node(snake, delete_node, NULL);
-    if (snake) free(snake);
+    if (snake) {
+        foreach_snake_node(snake, delete_node, NULL);
+        free(snake);
+    }
 }
 
 
@@ -71,35 +50,49 @@ void delete_snake(Snake *snake) {
  */
 void add_node(Snake *snake) {
     SnakeNode *node = malloc(sizeof(*node));
+    if (!node) return;
+
+    bool first_node = snake->head == NULL;
+    bool second_node = !first_node && snake->head == snake->tail;
+
     node->next = NULL;
+    node->prev = NULL;
     node->rect = malloc(sizeof(SDL_Rect));
     snake->size++;
 
     /* set position of a new node */
-    SnakeNode *tail = snake->tail;
-    switch (tail->direction) {
-        case UP:
-            node->y = tail->y + 1;
-            node->x = tail->x;
-            break;
-        case DOWN:
-            node->y = tail->y - 1;
-            node->x = tail->x;
-            break;
-        case LEFT:
-            node->x = tail->x + 1;
-            node->y = tail->y;
-            break;
-        case RIGHT:
-            node->x = tail->x - 1;
-            node->y = tail->y;
-            break;
-    }
+    if (first_node) {
+        node->x = MAX_CELL_X/2;
+        node->y = MAX_CELL_Y/2;
+        node->direction = LEFT;
+        snake->head = node;
+        snake->tail = node;
+    } else {
+        switch (snake->tail->direction) {
+            case UP:
+                node->x = snake->tail->x;
+                node->y = snake->tail->y + 1;
+                break;
+            case DOWN:
+                node->x = snake->tail->x;
+                node->y = snake->tail->y - 1;
+                break;
+            case LEFT:
+                node->x = snake->tail->x + 1;
+                node->y = snake->tail->y;
+                break;
+            case RIGHT:
+                node->x = snake->tail->x - 1;
+                node->y = snake->tail->y;
+                break;
+        }
 
-    node->direction = tail->direction;
-    tail->next = node;
-    node->prev = tail;
-    snake->tail = node;
+        node->direction = snake->tail->direction;
+        node->prev = snake->tail;
+        if (second_node) snake->head->next = node;
+        else snake->tail->next = node;
+        snake->tail = node;
+    }
 }
 
 

@@ -2,8 +2,8 @@
 
 
 bool check_boundary(SnakeNode *node, Area *area) {
-    bool in_bound_x = node->x <= area->max_cell_x && node->x >= 0;
-    bool in_bound_y = node->y <= area->max_cell_y && node->y >= 0;
+    bool in_bound_x = node->x < area->max_cell_x && node->x >= 0;
+    bool in_bound_y = node->y < area->max_cell_y && node->y >= 0;
     return in_bound_x && in_bound_y;
 }
 
@@ -45,6 +45,7 @@ bool check_food(Area* area) {
  */
 Area *create_area(Snake *snake, int max_cell_x, int max_cell_y) {
     Area *area = malloc(sizeof(*area));
+    if (!area) return NULL;
 
     area->max_cell_y = max_cell_y;
     area->max_cell_x = max_cell_x;
@@ -60,9 +61,11 @@ Area *create_area(Snake *snake, int max_cell_x, int max_cell_y) {
  * Deletes area and snake within it.
  */
 void delete_area(Area *area) {
-    delete_food(area->food);
-    delete_snake(area->snake);
-    free(area);
+    if (area) {
+        delete_food(area->food);
+        delete_snake(area->snake);
+        free(area);
+    }
 }
 
 
@@ -71,17 +74,20 @@ void delete_area(Area *area) {
  */
 Food *create_food(Area *area) {
     Food *food = malloc(sizeof(*food));
+    if (!food) return NULL;
 
     int new_x = 0;
     int new_y = 0;
 
     /* check if generated on snake */
     SnakeNode *node = NULL;
-    bool on_snake = false;
+    bool on_snake;
     do {
+        on_snake = false;
         node = area->snake->head;
         new_x = rand() % area->max_cell_x;
         new_y = rand() % area->max_cell_y;
+
         while (node) {
             if (node->x == new_x && node->y == new_y) {
                 on_snake = true;
@@ -89,6 +95,7 @@ Food *create_food(Area *area) {
             }
             node = node->next;
         }
+
     } while (on_snake);
 
     food->x = new_x;

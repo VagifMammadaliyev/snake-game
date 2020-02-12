@@ -51,14 +51,17 @@ void perform_log(Logger *logger) {
     set_formatted_time(log_time);
 
     if (logger->lf) {
+        fputs("***********************************\n", logger->lf);
         for (int i = 0; i < logger->logfunc_cnt; i++) {
             func = logger->logfuncs[i];
             obj = logger->objects[i];
             if (obj && func) {
+
                 fprintf(logger->lf, "[%s] - ", log_time);
                 func(logger->objects[i], logger->lf);
             }
         }
+        fputs("***********************************\n", logger->lf);
     }
 }
 

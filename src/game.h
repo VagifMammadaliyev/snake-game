@@ -13,9 +13,9 @@
 typedef struct {
     Area *area;
     Logger *logger;
-    SDL_Window *window;
-    SDL_Renderer *renderer;
     int speed;
+    SDL_Renderer *renderer;
+    SDL_Window *window;
 } Game;
 
 

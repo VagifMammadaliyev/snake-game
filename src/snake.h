@@ -35,7 +35,7 @@ typedef struct {
 typedef void (*SnakeNodeAction)(SnakeNode*, void*);
 
 
-Snake *create_snake(int start_x, int start_y, size_t length);
+Snake *create_snake(size_t length);
 void delete_snake(Snake *snake);
 void delete_node(SnakeNode *node, void*);
 
