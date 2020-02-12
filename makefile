@@ -2,7 +2,7 @@ CURRENTDIR = $(shell pwd)
 SRCDIR = src
 SOURCES = $(wildcard $(SRCDIR)/*.c)
 OBJDIR = $(SRCDIR)/obj
-OBJECTS = $(patsubst $(SRCDIR)/%.c,%.o,$(SOURCES))
+OBJECTS = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SOURCES))
 
 FLAGS = -Wall $(shell sdl2-confif --cflags)
 LIBS = $(shell sdl2-config --libs)
@@ -19,17 +19,19 @@ LOGFILE = $(LOGSDIR)/.log
 env:
 	export SNAKE_LOG_FILE=$(CURRENTDIR)/$(LOGFILE)
 
-directories:
+dirs:
 	mkdir -p $(BINDIR)
 	mkdir -p $(OBJDIR)
 	mkdir -p $(LOGSDIR)
 
 $(OBJECTS):
 	$(CC) $(FLAGS) $(LIBS) -c $(SOURCES)
-	@mv *.o $(OBJDIR)
+	mv *.o $(OBJDIR)/
 
-build: env directories $(OBJECTS)
-	$(CC) $(FLAGS) $(LIBS) $(OBJDIR)/$(OBJECTS) -o $(BIN)
+build: env dirs $(OBJECTS)
+	$(CC) $(FLAGS) $(LIBS) $(OBJECTS) -o $(BIN)
+
+rebuild: clean build
 
 debug:
 	$(CC) $(FLAGS) $(LIBS) -g $(SOURCES)
@@ -45,4 +47,4 @@ $(APPNAME):
 clean:
 	-rm -rfv a.out* $(OBJDIR)
 
-all: build run
+all: rebuild run
