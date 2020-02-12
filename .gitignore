@@ -1,0 +1,6 @@
+# objects and binary
+*.o
+bin/
+
+# logs
+.logs
