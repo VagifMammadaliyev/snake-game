@@ -105,6 +105,7 @@ void run_game(Game *game) {
  */
 void end_game(Game *game) {
     if (game) {
+        printf("Your score was: %lu\n", game->area->snake->score);
         delete_area(game->area);
         deinit_logger(game->logger);
         SDL_DestroyWindow(game->window);
