@@ -17,7 +17,6 @@ typedef struct {
     SDL_Rect *rect;
 } Food;
 
-
 typedef struct {
     int cell_height;
     int cell_width;
@@ -39,6 +38,7 @@ void check_food(Area* area);
 Food *create_food(Area *area);
 void delete_food(Food *food);
 
+void log_area(void* area, FILE *fp);
 void log_food(Food *food, FILE *fp);
 
 #endif

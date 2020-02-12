@@ -25,7 +25,6 @@ struct SnakeNode {
     SDL_Rect *rect;
 };
 
-
 typedef struct {
     SnakeNode* head;
     SnakeNode* tail;
@@ -49,7 +48,7 @@ void foreach_snake_node(Snake *snake, SnakeNodeAction action, void*);
 void foreach_snake_node_reversed(Snake *snake, SnakeNodeAction action, void*);
 
 void log_node(SnakeNode* node, void*);
-void log_snake(Snake *snake, FILE* fp);
+void log_snake(void *snake, FILE* fp);
 
 void draw_node(SnakeNode *node, void*);
 

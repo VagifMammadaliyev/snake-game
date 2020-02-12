@@ -4,18 +4,7 @@
 #include "constants.h"
 #include "snake.h"
 #include "area.h"
-
-
-void log_state(Area *area) {
-    static FILE *fp = NULL;
-    if (!fp) {
-        char *log_file_path = getenv("SNAKE_LOG_FILE");
-        fp = fopen(log_file_path, "a");
-        fputs("\nSESSION\n-------\n", fp);
-    }
-    if (area->snake) log_snake(area->snake, fp);
-    if (area->food) log_food(area->food, fp);
-}
+#include "logger.h"
 
 
 int main(void) {
@@ -35,20 +24,20 @@ int main(void) {
     Snake *snake = create_snake(MAX_CELL_X / 2, MAX_CELL_Y / 2, START_SIZE);
     Area *area = create_area(snake, MAX_CELL_X, MAX_CELL_Y);
 
+    Logger *logger = init_logger();
+    add_logfunc(logger, log_snake, (void*)snake);
+    add_logfunc(logger, log_area, (void*)area);
+
     /* game loop */
     int delay = 1000 / SPEED;
     SDL_Event event;
     bool running = true;
     while (running) {
-        /* perform logging */
-        log_state(area);
-
         SDL_Delay(delay);
         if (!check(area)) {
-            delete_area(area);
-            snake = create_snake(MAX_CELL_X / 2, MAX_CELL_Y / 2, START_SIZE);
-            area = create_area(snake, MAX_CELL_X, MAX_CELL_Y);
+            break;
         }
+        perform_log(logger);
         draw_area(area, renderer);
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -77,6 +66,7 @@ int main(void) {
         check_food(area);
     }
 
+    deinit_logger(logger);
     if (area) delete_area(area);
     SDL_Quit();
 }

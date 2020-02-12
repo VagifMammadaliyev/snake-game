@@ -211,7 +211,8 @@ void log_node(SnakeNode* node, void *ctx) {
 /*
  * Logs snake (for debugging purposes).
  */
-void log_snake(Snake *snake, FILE *fp) {
+void log_snake(void *obj, FILE *fp) {
+    Snake *snake = (Snake*)obj;
     fprintf(fp, "Snake size is %lu\n", snake->size);
     foreach_snake_node(snake, log_node, (void*)fp);
 }

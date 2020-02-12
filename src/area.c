@@ -128,6 +128,11 @@ void draw_area(Area *area, SDL_Renderer *renderer) {
 }
 
 
+void log_area(void *obj, FILE *fp) {
+    Area *area = (Area*)obj;
+    if (area && area->food) log_food(area->food, fp);
+}
+
 void log_food(Food *food, FILE *fp) {
     fprintf(fp, "Food: x=%d, y=%d\n", food->x, food->y);
 }
