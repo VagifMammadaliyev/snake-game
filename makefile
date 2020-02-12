@@ -12,14 +12,10 @@ BINDIR = bin
 APPNAME = snake
 BIN = $(BINDIR)/$(APPNAME)
 
-LOGSDIR = $(BINDIR)
-LOGFILE = $(LOGSDIR)/.log
-
 
 dirs:
 	mkdir -p $(BINDIR)
 	mkdir -p $(OBJDIR)
-	mkdir -p $(LOGSDIR)
 
 $(OBJECTS):
 	$(CC) $(FLAGS) $(LIBS) -c $(SOURCES)

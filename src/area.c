@@ -21,8 +21,11 @@ bool check(Area *area) {
     return true;
 }
 
-
-void check_food(Area* area) {
+/*
+ * Returns boolean indicating if node added to snake
+ * due to eating food.
+ */
+bool check_food(Area* area) {
     if (area && area->snake && area->food) {
         Food *food = area->food;
         SnakeNode *head = area->snake->head;
@@ -30,8 +33,10 @@ void check_food(Area* area) {
             add_node(area->snake);
             delete_food(food);
             area->food = create_food(area);
+            return true;
         }
     }
+    return false;
 }
 
 

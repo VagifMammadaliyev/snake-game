@@ -22,7 +22,7 @@ Logger *init_logger(void) {
         logger->lf = log_file;
     } else {
         printf("Can't open log file: %s\n", log_file_path);
-        printf("Set 'SNAKE_LOG_FILE' in order to suppress this message\n.");
+        printf("Set 'SNAKE_LOG_FILE' in order to suppress this message.\n");
         fflush(stdout);
     }
 

@@ -29,6 +29,7 @@ typedef struct {
     SnakeNode* head;
     SnakeNode* tail;
     size_t size;
+    size_t score;
 } Snake;
 
 typedef void (*SnakeNodeAction)(SnakeNode*, void*);

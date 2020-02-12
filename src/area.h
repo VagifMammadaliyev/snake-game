@@ -33,7 +33,7 @@ void draw_area(Area *area, SDL_Renderer *renderer);
 
 bool check(Area *area);
 bool check_boundary(SnakeNode *node, Area *area);
-void check_food(Area* area);
+bool check_food(Area* area);
 
 Food *create_food(Area *area);
 void delete_food(Food *food);

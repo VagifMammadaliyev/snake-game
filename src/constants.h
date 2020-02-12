@@ -11,5 +11,6 @@
 #define CELL_H (WIN_H/MAX_CELL_Y)   /* Cell's height */
 #define CELL_W (WIN_W/MAX_CELL_X)   /* Cell's width */
 #define SPEED 10                    /* Game speed */
+#define ADD_SPEED_AFTER 5           /* Add speed after eating food */
 
 #endif

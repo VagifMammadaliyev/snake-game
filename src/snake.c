@@ -10,6 +10,7 @@ Snake *create_snake(int start_x, int start_y, size_t length) {
     SnakeNode *prev_node = NULL;
 
     snake->size = length;
+    snake->score = 0UL;
 
     for (size_t i = 0; i < length; i++) {
         SnakeNode *node = malloc(sizeof(*node));
